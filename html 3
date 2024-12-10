@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Conversion Calculator</h1>
+        <form id="conversion-form">
+            <label for="conversion-type">Select Conversion Type:</label>
+            <select id="conversion-type" onchange="changeConversionType()">
+                <option value="length">Length</option>
+                <option value="weight">Weight</option>
+                <option value="temperature">Temperature</option>
+                <option value="volume">Volume</option>
+                <option value="area">Area</option>
+                <option value="speed">Speed</option>
+                <option value="time">Time</option>
+                <option value="power">Power</option>
+                <option value="energy">Energy</option>
+                <option value="data">Data Storage</option>
+            </select>
+
+            <!-- Conversion Types go here as described in the previous HTML -->
+
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
