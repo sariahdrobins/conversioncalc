@@ -1,634 +1,269 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversion Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
-            margin: 0;
-            padding: 0;
+// Function to switch between conversion types
+function changeConversionType() {
+    const conversionType = document.getElementById('conversion-type').value;
+    const conversionContents = document.querySelectorAll('.conversion-content');
+    conversionContents.forEach(content => content.classList.remove('active'));
+    document.getElementById(`${conversionType}-conversion`).classList.add('active');
+}
+
+// Length Conversion
+function convertLength() {
+    const value = parseFloat(document.getElementById('length-value').value);
+    const fromUnit = document.getElementById('length-from').value;
+    const toUnit = document.getElementById('length-to').value;
+
+    const conversionRates = {
+        millimeters: 1,
+        centimeters: 10,
+        meters: 1000,
+        kilometers: 1000000,
+        inches: 25.4,
+        feet: 304.8,
+        yards: 914.4,
+        miles: 1609344
+    };
+
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
+
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('length-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
+
+// Weight Conversion
+function convertWeight() {
+    const value = parseFloat(document.getElementById('weight-value').value);
+    const fromUnit = document.getElementById('weight-from').value;
+    const toUnit = document.getElementById('weight-to').value;
+
+    const conversionRates = {
+        milligrams: 1,
+        grams: 1000,
+        kilograms: 1000000,
+        ounces: 28349.5,
+        pounds: 453592,
+        stones: 6350293,
+        metric_tons: 1000000000,
+    };
+
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
+
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('weight-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
+
+// Temperature Conversion
+function convertTemperature() {
+    const value = parseFloat(document.getElementById('temperature-value').value);
+    const fromUnit = document.getElementById('temperature-from').value;
+    const toUnit = document.getElementById('temperature-to').value;
+
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
+
+    let result;
+
+    if (fromUnit === 'C') {
+        if (toUnit === 'F') {
+            result = (value * 9/5) + 32;
+        } else if (toUnit === 'K') {
+            result = value + 273.15;
+        } else {
+            result = value;
         }
-
-        .container {
-            width: 100%;
-            max-width: 700px;
-            margin: 30px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+    } else if (fromUnit === 'F') {
+        if (toUnit === 'C') {
+            result = (value - 32) * 5/9;
+        } else if (toUnit === 'K') {
+            result = (value - 32) * 5/9 + 273.15;
+        } else {
+            result = value;
         }
-
-        h1 {
-            text-align: center;
-            color: #0078d4;
-            font-size: 30px;
-            margin-bottom: 20px;
+    } else if (fromUnit === 'K') {
+        if (toUnit === 'C') {
+            result = value - 273.15;
+        } else if (toUnit === 'F') {
+            result = (value - 273.15) * 9/5 + 32;
+        } else {
+            result = value;
         }
+    }
 
-        label {
-            display: block;
-            font-size: 16px;
-            margin: 10px 0 5px;
-            color: #333;
-        }
+    document.getElementById('temperature-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-        select, input[type="number"], button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
+// Volume Conversion
+function convertVolume() {
+    const value = parseFloat(document.getElementById('volume-value').value);
+    const fromUnit = document.getElementById('volume-from').value;
+    const toUnit = document.getElementById('volume-to').value;
 
-        button {
-            background-color: #0078d4;
-            color: white;
-            cursor: pointer;
-            border: none;
-            font-weight: bold;
-        }
+    const conversionRates = {
+        milliliters: 1,
+        centiliters: 10,
+        deciliters: 100,
+        liters: 1000,
+        gallons: 3785.41,
+        quarts: 946.353,
+        pints: 473.176,
+        cups: 240,
+    };
 
-        button:hover {
-            background-color: #005fa3;
-        }
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-        .result {
-            padding: 10px;
-            background-color: #f5f5f5;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 18px;
-            color: #333;
-            font-weight: bold;
-            text-align: center;
-        }
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('volume-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-        .conversion-content {
-            display: none;
-        }
+// Area Conversion
+function convertArea() {
+    const value = parseFloat(document.getElementById('area-value').value);
+    const fromUnit = document.getElementById('area-from').value;
+    const toUnit = document.getElementById('area-to').value;
 
-        .active {
-            display: block;
-        }
+    const conversionRates = {
+        square_mm: 1,
+        square_cm: 100,
+        square_m: 1000000,
+        square_km: 1000000000000,
+        square_inch: 645.16,
+        square_ft: 92903.04,
+        square_yard: 836127.36,
+        square_mile: 25899881103.04,
+    };
 
-        .container select, .container input {
-            background-color: #e6f7ff;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Conversion Calculator</h1>
-        <form id="conversion-form">
-            <!-- Conversion Type Selection -->
-            <label for="conversion-type">Select Conversion Type:</label>
-            <select id="conversion-type" onchange="changeConversionType()">
-                <option value="length">Length</option>
-                <option value="weight">Weight</option>
-                <option value="temperature">Temperature</option>
-                <option value="volume">Volume</option>
-                <option value="area">Area</option>
-                <option value="speed">Speed</option>
-                <option value="time">Time</option>
-                <option value="power">Power</option>
-                <option value="energy">Energy</option>
-                <option value="data">Data Storage</option>
-            </select>
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-            <!-- Length Conversion -->
-            <div id="length-conversion" class="conversion-content active">
-                <label for="length-value">Enter Value:</label>
-                <input type="number" id="length-value" placeholder="Enter value" required>
-                <label for="length-from">From:</label>
-                <select id="length-from">
-                    <option value="millimeters">Millimeters</option>
-                    <option value="centimeters">Centimeters</option>
-                    <option value="meters">Meters</option>
-                    <option value="kilometers">Kilometers</option>
-                    <option value="inches">Inches</option>
-                    <option value="feet">Feet</option>
-                    <option value="yards">Yards</option>
-                    <option value="miles">Miles</option>
-                </select>
-                <label for="length-to">To:</label>
-                <select id="length-to">
-                    <option value="millimeters">Millimeters</option>
-                    <option value="centimeters">Centimeters</option>
-                    <option value="meters">Meters</option>
-                    <option value="kilometers">Kilometers</option>
-                    <option value="inches">Inches</option>
-                    <option value="feet">Feet</option>
-                    <option value="yards">Yards</option>
-                    <option value="miles">Miles</option>
-                </select>
-                <button type="button" onclick="convertLength()">Convert</button>
-                <div id="length-result" class="result"></div>
-            </div>
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('area-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-            <!-- Weight Conversion -->
-            <div id="weight-conversion" class="conversion-content">
-                <label for="weight-value">Enter Value:</label>
-                <input type="number" id="weight-value" placeholder="Enter value" required>
-                <label for="weight-from">From:</label>
-                <select id="weight-from">
-                    <option value="milligrams">Milligrams</option>
-                    <option value="grams">Grams</option>
-                    <option value="kilograms">Kilograms</option>
-                    <option value="ounces">Ounces</option>
-                    <option value="pounds">Pounds</option>
-                    <option value="stones">Stones</option>
-                    <option value="metric_tons">Metric Tons</option>
-                </select>
-                <label for="weight-to">To:</label>
-                <select id="weight-to">
-                    <option value="milligrams">Milligrams</option>
-                    <option value="grams">Grams</option>
-                    <option value="kilograms">Kilograms</option>
-                    <option value="ounces">Ounces</option>
-                    <option value="pounds">Pounds</option>
-                    <option value="stones">Stones</option>
-                    <option value="metric_tons">Metric Tons</option>
-                </select>
-                <button type="button" onclick="convertWeight()">Convert</button>
-                <div id="weight-result" class="result"></div>
-            </div>
+// Speed Conversion
+function convertSpeed() {
+    const value = parseFloat(document.getElementById('speed-value').value);
+    const fromUnit = document.getElementById('speed-from').value;
+    const toUnit = document.getElementById('speed-to').value;
 
-            <!-- Temperature Conversion -->
-            <div id="temperature-conversion" class="conversion-content">
-                <label for="temperature-value">Enter Value:</label>
-                <input type="number" id="temperature-value" placeholder="Enter value" required>
-                <label for="temperature-from">From:</label>
-                <select id="temperature-from">
-                    <option value="C">Celsius</option>
-                    <option value="F">Fahrenheit</option>
-                    <option value="K">Kelvin</option>
-                </select>
-                <label for="temperature-to">To:</label>
-                <select id="temperature-to">
-                    <option value="C">Celsius</option>
-                    <option value="F">Fahrenheit</option>
-                    <option value="K">Kelvin</option>
-                </select>
-                <button type="button" onclick="convertTemperature()">Convert</button>
-                <div id="temperature-result" class="result"></div>
-            </div>
+    const conversionRates = {
+        meters_per_second: 1,
+        kilometers_per_hour: 3.6,
+        miles_per_hour: 2.23694,
+        feet_per_second: 3.28084,
+        knots: 1.94384,
+    };
 
-            <!-- Volume Conversion -->
-            <div id="volume-conversion" class="conversion-content">
-                <label for="volume-value">Enter Value:</label>
-                <input type="number" id="volume-value" placeholder="Enter value" required>
-                <label for="volume-from">From:</label>
-                <select id="volume-from">
-                    <option value="milliliters">Milliliters</option>
-                    <option value="centiliters">Centiliters</option>
-                    <option value="deciliters">Deciliters</option>
-                    <option value="liters">Liters</option>
-                    <option value="gallons">Gallons</option>
-                    <option value="quarts">Quarts</option>
-                    <option value="pints">Pints</option>
-                    <option value="cups">Cups</option>
-                </select>
-                <label for="volume-to">To:</label>
-                <select id="volume-to">
-                    <option value="milliliters">Milliliters</option>
-                    <option value="centiliters">Centiliters</option>
-                    <option value="deciliters">Deciliters</option>
-                    <option value="liters">Liters</option>
-                    <option value="gallons">Gallons</option>
-                    <option value="quarts">Quarts</option>
-                    <option value="pints">Pints</option>
-                    <option value="cups">Cups</option>
-                </select>
-                <button type="button" onclick="convertVolume()">Convert</button>
-                <div id="volume-result" class="result"></div>
-            </div>
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-            <!-- Area Conversion -->
-            <div id="area-conversion" class="conversion-content">
-                <label for="area-value">Enter Value:</label>
-                <input type="number" id="area-value" placeholder="Enter value" required>
-                <label for="area-from">From:</label>
-                <select id="area-from">
-                    <option value="square_mm">Square Millimeters</option>
-                    <option value="square_cm">Square Centimeters</option>
-                    <option value="square_m">Square Meters</option>
-                    <option value="square_km">Square Kilometers</option>
-                    <option value="square_inch">Square Inches</option>
-                    <option value="square_ft">Square Feet</option>
-                    <option value="square_yard">Square Yards</option>
-                    <option value="square_mile">Square Miles</option>
-                </select>
-                <label for="area-to">To:</label>
-                <select id="area-to">
-                    <option value="square_mm">Square Millimeters</option>
-                    <option value="square_cm">Square Centimeters</option>
-                    <option value="square_m">Square Meters</option>
-                    <option value="square_km">Square Kilometers</option>
-                    <option value="square_inch">Square Inches</option>
-                    <option value="square_ft">Square Feet</option>
-                    <option value="square_yard">Square Yards</option>
-                    <option value="square_mile">Square Miles</option>
-                </select>
-                <button type="button" onclick="convertArea()">Convert</button>
-                <div id="area-result" class="result"></div>
-            </div>
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('speed-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-            <!-- Speed Conversion -->
-            <div id="speed-conversion" class="conversion-content">
-                <label for="speed-value">Enter Value:</label>
-                <input type="number" id="speed-value" placeholder="Enter value" required>
-                <label for="speed-from">From:</label>
-                <select id="speed-from">
-                    <option value="meters_per_second">Meters per Second</option>
-                    <option value="kilometers_per_hour">Kilometers per Hour</option>
-                    <option value="miles_per_hour">Miles per Hour</option>
-                    <option value="feet_per_second">Feet per Second</option>
-                    <option value="knots">Knots</option>
-                </select>
-                <label for="speed-to">To:</label>
-                <select id="speed-to">
-                    <option value="meters_per_second">Meters per Second</option>
-                    <option value="kilometers_per_hour">Kilometers per Hour</option>
-                    <option value="miles_per_hour">Miles per Hour</option>
-                    <option value="feet_per_second">Feet per Second</option>
-                    <option value="knots">Knots</option>
-                </select>
-                <button type="button" onclick="convertSpeed()">Convert</button>
-                <div id="speed-result" class="result"></div>
-            </div>
+// Time Conversion
+function convertTime() {
+    const value = parseFloat(document.getElementById('time-value').value);
+    const fromUnit = document.getElementById('time-from').value;
+    const toUnit = document.getElementById('time-to').value;
 
-            <!-- Time Conversion -->
-            <div id="time-conversion" class="conversion-content">
-                <label for="time-value">Enter Value:</label>
-                <input type="number" id="time-value" placeholder="Enter value" required>
-                <label for="time-from">From:</label>
-                <select id="time-from">
-                    <option value="seconds">Seconds</option>
-                    <option value="minutes">Minutes</option>
-                    <option value="hours">Hours</option>
-                    <option value="days">Days</option>
-                    <option value="weeks">Weeks</option>
-                    <option value="months">Months</option>
-                    <option value="years">Years</option>
-                </select>
-                <label for="time-to">To:</label>
-                <select id="time-to">
-                    <option value="seconds">Seconds</option>
-                    <option value="minutes">Minutes</option>
-                    <option value="hours">Hours</option>
-                    <option value="days">Days</option>
-                    <option value="weeks">Weeks</option>
-                    <option value="months">Months</option>
-                    <option value="years">Years</option>
-                </select>
-                <button type="button" onclick="convertTime()">Convert</button>
-                <div id="time-result" class="result"></div>
-            </div>
+    const conversionRates = {
+        seconds: 1,
+        minutes: 60,
+        hours: 3600,
+        days: 86400,
+        weeks: 604800,
+        months: 2629746,
+        years: 31556952,
+    };
 
-            <!-- Power Conversion -->
-            <div id="power-conversion" class="conversion-content">
-                <label for="power-value">Enter Value:</label>
-                <input type="number" id="power-value" placeholder="Enter value" required>
-                <label for="power-from">From:</label>
-                <select id="power-from">
-                    <option value="watts">Watts</option>
-                    <option value="kilowatts">Kilowatts</option>
-                    <option value="horsepower">Horsepower</option>
-                </select>
-                <label for="power-to">To:</label>
-                <select id="power-to">
-                    <option value="watts">Watts</option>
-                    <option value="kilowatts">Kilowatts</option>
-                    <option value="horsepower">Horsepower</option>
-                </select>
-                <button type="button" onclick="convertPower()">Convert</button>
-                <div id="power-result" class="result"></div>
-            </div>
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-            <!-- Energy Conversion -->
-            <div id="energy-conversion" class="conversion-content">
-                <label for="energy-value">Enter Value:</label>
-                <input type="number" id="energy-value" placeholder="Enter value" required>
-                <label for="energy-from">From:</label>
-                <select id="energy-from">
-                    <option value="joules">Joules</option>
-                    <option value="calories">Calories</option>
-                    <option value="kilojoules">Kilojoules</option>
-                    <option value="watt_hours">Watt Hours</option>
-                    <option value="kilowatt_hours">Kilowatt Hours</option>
-                </select>
-                <label for="energy-to">To:</label>
-                <select id="energy-to">
-                    <option value="joules">Joules</option>
-                    <option value="calories">Calories</option>
-                    <option value="kilojoules">Kilojoules</option>
-                    <option value="watt_hours">Watt Hours</option>
-                    <option value="kilowatt_hours">Kilowatt Hours</option>
-                </select>
-                <button type="button" onclick="convertEnergy()">Convert</button>
-                <div id="energy-result" class="result"></div>
-            </div>
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('time-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-            <!-- Data Storage Conversion -->
-            <div id="data-conversion" class="conversion-content">
-                <label for="data-value">Enter Value:</label>
-                <input type="number" id="data-value" placeholder="Enter value" required>
-                <label for="data-from">From:</label>
-                <select id="data-from">
-                    <option value="bytes">Bytes</option>
-                    <option value="kilobytes">Kilobytes</option>
-                    <option value="megabytes">Megabytes</option>
-                    <option value="gigabytes">Gigabytes</option>
-                    <option value="terabytes">Terabytes</option>
-                </select>
-                <label for="data-to">To:</label>
-                <select id="data-to">
-                    <option value="bytes">Bytes</option>
-                    <option value="kilobytes">Kilobytes</option>
-                    <option value="megabytes">Megabytes</option>
-                    <option value="gigabytes">Gigabytes</option>
-                    <option value="terabytes">Terabytes</option>
-                </select>
-                <button type="button" onclick="convertData()">Convert</button>
-                <div id="data-result" class="result"></div>
-            </div>
-        </form>
-    </div>
+// Power Conversion
+function convertPower() {
+    const value = parseFloat(document.getElementById('power-value').value);
+    const fromUnit = document.getElementById('power-from').value;
+    const toUnit = document.getElementById('power-to').value;
 
-    <script>
-        // Function to switch between conversion types
-        function changeConversionType() {
-            const conversionType = document.getElementById('conversion-type').value;
-            const conversionContents = document.querySelectorAll('.conversion-content');
-            conversionContents.forEach(content => content.classList.remove('active'));
-            document.getElementById(`${conversionType}-conversion`).classList.add('active');
-        }
+    const conversionRates = {
+        watts: 1,
+        kilowatts: 1000,
+        horsepower: 745.7,
+        joules_per_second: 1,
+    };
 
-        // Length Conversion
-        function convertLength() {
-            const value = parseFloat(document.getElementById('length-value').value);
-            const fromUnit = document.getElementById('length-from').value;
-            const toUnit = document.getElementById('length-to').value;
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-            const conversionRates = {
-                millimeters: 1,
-                centimeters: 10,
-                meters: 1000,
-                kilometers: 1000000,
-                inches: 25.4,
-                feet: 304.8,
-                yards: 914.4,
-                miles: 1609344
-            };
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('power-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
+// Energy Conversion
+function convertEnergy() {
+    const value = parseFloat(document.getElementById('energy-value').value);
+    const fromUnit = document.getElementById('energy-from').value;
+    const toUnit = document.getElementById('energy-to').value;
 
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('length-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
+    const conversionRates = {
+        joules: 1,
+        kilojoules: 1000,
+        calories: 4.184,
+        kilocalories: 4184,
+        watt_hours: 3600,
+        kilowatt_hours: 3600000,
+    };
 
-        // Weight Conversion
-        function convertWeight() {
-            const value = parseFloat(document.getElementById('weight-value').value);
-            const fromUnit = document.getElementById('weight-from').value;
-            const toUnit = document.getElementById('weight-to').value;
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-            const conversionRates = {
-                milligrams: 1,
-                grams: 1000,
-                kilograms: 1000000,
-                ounces: 28349.5,
-                pounds: 453592,
-                stones: 6350293,
-                metric_tons: 1000000000,
-            };
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('energy-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
 
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
+// Data Storage Conversion
+function convertData() {
+    const value = parseFloat(document.getElementById('data-value').value);
+    const fromUnit = document.getElementById('data-from').value;
+    const toUnit = document.getElementById('data-to').value;
 
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('weight-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
+    const conversionRates = {
+        bytes: 1,
+        kilobytes: 1024,
+        megabytes: 1048576,
+        gigabytes: 1073741824,
+        terabytes: 1099511627776,
+    };
 
-        // Temperature Conversion
-        function convertTemperature() {
-            const value = parseFloat(document.getElementById('temperature-value').value);
-            const fromUnit = document.getElementById('temperature-from').value;
-            const toUnit = document.getElementById('temperature-to').value;
+    if (!value || isNaN(value)) {
+        alert("Please enter a valid number.");
+        return;
+    }
 
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            let result;
-
-            if (fromUnit === 'C') {
-                if (toUnit === 'F') {
-                    result = (value * 9/5) + 32;
-                } else if (toUnit === 'K') {
-                    result = value + 273.15;
-                } else {
-                    result = value;
-                }
-            } else if (fromUnit === 'F') {
-                if (toUnit === 'C') {
-                    result = (value - 32) * 5/9;
-                } else if (toUnit === 'K') {
-                    result = (value - 32) * 5/9 + 273.15;
-                } else {
-                    result = value;
-                }
-            } else if (fromUnit === 'K') {
-                if (toUnit === 'C') {
-                    result = value - 273.15;
-                } else if (toUnit === 'F') {
-                    result = (value - 273.15) * 9/5 + 32;
-                } else {
-                    result = value;
-                }
-            }
-
-            document.getElementById('temperature-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Volume Conversion
-        function convertVolume() {
-            const value = parseFloat(document.getElementById('volume-value').value);
-            const fromUnit = document.getElementById('volume-from').value;
-            const toUnit = document.getElementById('volume-to').value;
-
-            const conversionRates = {
-                milliliters: 1,
-                centiliters: 10,
-                deciliters: 100,
-                liters: 1000,
-                gallons: 3785.41,
-                quarts: 946.353,
-                pints: 473.176,
-                cups: 240,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('volume-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Area Conversion
-        function convertArea() {
-            const value = parseFloat(document.getElementById('area-value').value);
-            const fromUnit = document.getElementById('area-from').value;
-            const toUnit = document.getElementById('area-to').value;
-
-            const conversionRates = {
-                square_mm: 1,
-                square_cm: 100,
-                square_m: 1000000,
-                square_km: 1000000000000,
-                square_inch: 645.16,
-                square_ft: 92903.04,
-                square_yard: 836127.36,
-                square_mile: 25899881103.04,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('area-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Speed Conversion
-        function convertSpeed() {
-            const value = parseFloat(document.getElementById('speed-value').value);
-            const fromUnit = document.getElementById('speed-from').value;
-            const toUnit = document.getElementById('speed-to').value;
-
-            const conversionRates = {
-                meters_per_second: 1,
-                kilometers_per_hour: 3.6,
-                miles_per_hour: 2.23694,
-                feet_per_second: 3.28084,
-                knots: 1.94384,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('speed-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Time Conversion
-        function convertTime() {
-            const value = parseFloat(document.getElementById('time-value').value);
-            const fromUnit = document.getElementById('time-from').value;
-            const toUnit = document.getElementById('time-to').value;
-
-            const conversionRates = {
-                seconds: 1,
-                minutes: 60,
-                hours: 3600,
-                days: 86400,
-                weeks: 604800,
-                months: 2629746,
-                years: 31556952,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('time-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Power Conversion
-        function convertPower() {
-            const value = parseFloat(document.getElementById('power-value').value);
-            const fromUnit = document.getElementById('power-from').value;
-            const toUnit = document.getElementById('power-to').value;
-
-            const conversionRates = {
-                watts: 1,
-                kilowatts: 1000,
-                horsepower: 745.7,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('power-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Energy Conversion
-        function convertEnergy() {
-            const value = parseFloat(document.getElementById('energy-value').value);
-            const fromUnit = document.getElementById('energy-from').value;
-            const toUnit = document.getElementById('energy-to').value;
-
-            const conversionRates = {
-                joules: 1,
-                calories: 4.184,
-                kilojoules: 1000,
-                watt_hours: 3600,
-                kilowatt_hours: 3600000,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('energy-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-
-        // Data Storage Conversion
-        function convertData() {
-            const value = parseFloat(document.getElementById('data-value').value);
-            const fromUnit = document.getElementById('data-from').value;
-            const toUnit = document.getElementById('data-to').value;
-
-            const conversionRates = {
-                bytes: 1,
-                kilobytes: 1024,
-                megabytes: 1024 * 1024,
-                gigabytes: 1024 * 1024 * 1024,
-                terabytes: 1024 * 1024 * 1024 * 1024,
-            };
-
-            if (!value || isNaN(value)) {
-                alert("Please enter a valid number.");
-                return;
-            }
-
-            const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
-            document.getElementById('data-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-        }
-    </script>
-</body>
-</html>
+    const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+    document.getElementById('data-result').innerHTML = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+}
