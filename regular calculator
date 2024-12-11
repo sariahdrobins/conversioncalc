@@ -155,9 +155,11 @@
 
 <script>
     let isDegreeMode = true; // Start in Degree mode
+    let isResult = false; // Flag to track if result is displayed
 
     function clearDisplay() {
         document.getElementById('display').value = '';
+        isResult = false; // Reset the result flag
     }
 
     function deleteLast() {
@@ -167,6 +169,13 @@
 
     function appendValue(value) {
         const display = document.getElementById('display');
+
+        // If a result is displayed, clear the display before new input
+        if (isResult) {
+            display.value = '';
+            isResult = false;
+        }
+
         display.value += value;
     }
 
@@ -199,10 +208,13 @@
 
         try {
             // Evaluate the expression securely
-            let result = eval(expression); // eval is safe in this controlled environment
+            let result = eval(expression);
 
-            // Display the result in the display
+            // Display the result
             document.getElementById('display').value = result;
+
+            // Mark that result was shown
+            isResult = true;
 
             // Save the calculation to history
             saveToHistory(expression, result);
