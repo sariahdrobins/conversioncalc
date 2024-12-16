@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+            margin: 0;
+        }
+        .converter {
+            width: 500px;
+            padding: 16px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .converter h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        .converter label {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .converter input[type="file"] {
+            margin-bottom: 20px;
+        }
+        .converter select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .converter button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .converter button:hover {
+            background-color: #45a049;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter">
+    <h2>Document Converter</h2>
+
+    <label for="fileInput">Upload your document:</label>
+    <input type="file" id="fileInput" accept=".doc,.docx,.pdf,.rtf,.html,.xls,.xlsx,.ppt,.pptx,.txt">
+
+    <label for="formatSelect">Select target format:</label>
+    <select id="formatSelect">
+        <option value="pdf">PDF</option>
+        <option value="doc">DOC</option>
+        <option value="docx">DOCX</option>
+        <option value="rtf">RTF</option>
+        <option value="html">HTML</option>
+        <option value="xls">XLS</option>
+        <option value="xlsx">XLSX</option>
+        <option value="ppt">PPT</option>
+        <option value="pptx">PPTX</option>
+        <option value="txt">TXT</option>
+    </select>
+
+    <button onclick="convertDocument()">Convert</button>
+
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+    function convertDocument() {
+        const fileInput = document.getElementById('fileInput');
+        const formatSelect = document.getElementById('formatSelect');
+        const status = document.getElementById('status');
+
+        // Check if a file is selected
+        if (!fileInput.files.length) {
+            status.textContent = 'Please select a file to convert.';
+            status.style.color = 'red';
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const targetFormat = formatSelect.value;
+
+        // Create a FormData object to send the file and target format
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('targetFormat', targetFormat);
+
+        status.textContent = 'Converting your document...';
+        status.style.color = 'black';
+
+        // Simulate a file upload and conversion process
+        fetch('https://example.com/convert', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Conversion failed. Please try again.');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Create a download link for the converted file
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `converted.${targetFormat}`;
+            link.click();
+
+            status.textContent = 'Conversion successful! Your file is downloading...';
+            status.style.color = 'green';
+        })
+        .catch(error => {
+            status.textContent = error.message;
+            status.style.color = 'red';
+        });
+    }
+</script>
+
+</body>
+</html>
