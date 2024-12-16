@@ -172,8 +172,7 @@
 
         // If a result is displayed, clear the display before new input
         if (isResult) {
-            display.value = '';
-            isResult = false;
+            clearDisplay();  // Clear the display when a result is shown
         }
 
         display.value += value;
