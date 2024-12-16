@@ -181,6 +181,11 @@
     function calculateResult() {
         let expression = document.getElementById('display').value;
 
+        // Handle percentages (convert to decimal)
+        expression = expression.replace(/(\d+)%/g, (match, number) => {
+            return Number(number) / 100; // Convert percentage to decimal
+        });
+
         // Replace square root and power operations for JavaScript evaluation
         expression = expression.replace(/√/g, 'Math.sqrt');
         expression = expression.replace(/\^/g, '**');
