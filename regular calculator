@@ -170,12 +170,13 @@
     function appendValue(value) {
         const display = document.getElementById('display');
 
-        // If a result is displayed, clear the display before new input
-        if (isResult) {
-            clearDisplay();  // Clear the display when a result is shown
+        // If a result is displayed and the input is not an operator, clear the display before new input
+        if (isResult && !['+', '-', '*', '/', '%', '^'].includes(value)) {
+            clearDisplay();
         }
 
         display.value += value;
+        isResult = false; // Reset the result flag
     }
 
     function calculateResult() {
